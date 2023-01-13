@@ -6,7 +6,7 @@ namespace ShiftPlanningRest {
 
         public static string ConnectionString {
             get {
-                if(Configuration == null) {
+                if (Configuration == null) {
                     return "";
                 }
                 return Configuration.GetConnectionString("ShiftPlanningDatabase")!;
