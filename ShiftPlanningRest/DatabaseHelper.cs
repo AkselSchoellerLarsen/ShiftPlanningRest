@@ -1,12 +1,15 @@
-﻿using ShiftPlanningLibrary;
-using System.Data.SqlClient;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace ShiftPlanningRest {
     public static class DatabaseHelper {
+        public static IConfiguration? Configuration { private get; set; }
 
         public static string ConnectionString {
             get {
-                return "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ShiftPlanningDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+                if(Configuration == null) {
+                    return "";
+                }
+                return Configuration.GetConnectionString("ShiftPlanningDatabase")!;
             }
         }
     }

@@ -8,10 +8,12 @@ namespace ShiftPlanningRest.Controllers {
     public class ShiftController : Controller, IShiftController {
         private static IShiftManager _manager = new ShiftManager();
 
+        [HttpGet]
         public List<IShift> GetShifts() {
             return _manager.GetShifts();
         }
 
+        [HttpPost]
         public void Post([FromBody] IShift shift) {
             _manager.AddShift(shift);
         }

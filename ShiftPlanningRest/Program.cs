@@ -1,3 +1,4 @@
+using ShiftPlanningRest;
 using ShiftPlanningRest.Managers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,5 +23,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+DatabaseHelper.Configuration = app.Configuration;
 
 app.Run();
