@@ -1,11 +1,17 @@
 using ShiftPlanningLibrary;
+using ShiftPlanningRest;
 using ShiftPlanningRest.Managers;
 
 namespace ShiftPlanningRestTesting {
     [TestClass]
     public class ShiftManagerTests {
+
+        private static string testDatabaseConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ShiftPlanningDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+
         [TestMethod]
         public void ShiftManagerTestsGetShiftsPositive() {
+            DatabaseHelper.ShiftPlanningDatabase = testDatabaseConnectionString;
+
             IShiftManager manager = new ShiftManager();
 
             manager.GetShifts();
@@ -13,6 +19,8 @@ namespace ShiftPlanningRestTesting {
 
         [TestMethod]
         public void ShiftManagerTestsAddShiftPoitive() {
+            DatabaseHelper.ShiftPlanningDatabase = testDatabaseConnectionString;
+
             IShiftManager manager = new ShiftManager();
 
             List<IShift> pre = manager.GetShifts();

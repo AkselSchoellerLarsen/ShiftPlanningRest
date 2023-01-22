@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ShiftPlanningLibrary\ShiftPlanningLibrary\ShiftPlanningLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="ShiftPlanningLibrary">
       <HintPath>..\..\ShiftPlanningLibrary\ShiftPlanningLibrary\bin\Debug\net7.0\ShiftPlanningLibrary.dll</HintPath>
     </Reference>

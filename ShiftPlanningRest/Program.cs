@@ -24,6 +24,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-DatabaseHelper.Configuration = app.Configuration;
+DatabaseHelper.ShiftPlanningDatabase = app.Configuration.GetConnectionString("ShiftPlanningDatabase");
 
 app.Run();

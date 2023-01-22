@@ -11,10 +11,10 @@ namespace ShiftPlanningRest.Managers {
 
         #region GetShifts
         public List<IShift> GetShifts() {
-            return _shifts;
+            return new List<IShift>(_shifts);
         }
 
-        private static string SQLSelectShifts = "SELECT * FROM dbo.iteration1_shift";
+        private static string SQLSelectShifts = "SELECT * FROM dbo.iteration1_shift;";
 
         private async static Task<List<IShift>> SelectShifts() {
             try {
@@ -42,7 +42,7 @@ namespace ShiftPlanningRest.Managers {
                 Console.WriteLine(s);
                 Console.Beep();
             }
-            return new List<IShift>();
+            throw new Exception("ShiftManager failed to get shifts from database");
         }
         #endregion
         #region AddShift
@@ -51,8 +51,8 @@ namespace ShiftPlanningRest.Managers {
             return InsertShift(shift).Result;
         }
 
-        private static string SQLInsertShift = "Insert INTO dbo.iteration1_shift" +
-            "VALUES(@id, @start, @end)";
+        private static string SQLInsertShift = "Insert INTO dbo.iteration1_shift\n" +
+            "VALUES(@id, @start, @end);";
 
         private static async Task<bool> InsertShift(IShift shift) {
             try {

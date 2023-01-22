@@ -7,6 +7,6 @@ namespace ShiftPlanningRest.Controllers {
         public List<IShift> GetShifts();
 
         [HttpPost]
-        public void Post([FromBody] IShift shift);
+        public void Post([FromBody] Shift shift);
     }
 }

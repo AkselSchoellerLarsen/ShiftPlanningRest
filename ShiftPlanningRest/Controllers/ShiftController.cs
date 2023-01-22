@@ -14,7 +14,7 @@ namespace ShiftPlanningRest.Controllers {
         }
 
         [HttpPost]
-        public void Post([FromBody] IShift shift) {
+        public void Post([FromBody] Shift shift) {
             _manager.AddShift(shift);
         }
     }
