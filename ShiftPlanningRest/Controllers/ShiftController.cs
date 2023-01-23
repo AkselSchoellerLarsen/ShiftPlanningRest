@@ -6,7 +6,11 @@ namespace ShiftPlanningRest.Controllers {
     [Route("[controller]")]
     [ApiController]
     public class ShiftController : Controller, IShiftController {
-        private static IShiftManager _manager = new ShiftManager();
+        private readonly IShiftManager _manager;
+
+        public ShiftController(IShiftManager shiftManager) {
+            _manager = shiftManager;
+        }
 
         [HttpGet]
         public List<IShift> GetShifts() {
