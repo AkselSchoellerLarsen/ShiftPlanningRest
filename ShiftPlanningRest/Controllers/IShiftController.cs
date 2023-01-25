@@ -8,5 +8,15 @@ namespace ShiftPlanningRest.Controllers {
 
         [HttpPost]
         public void Post([FromBody] Shift shift);
+
+        [HttpPut]
+        public void Put([FromBody] Shift shift);
+
+        [HttpDelete]
+        public void Delete([FromBody] Shift shift);
+
+        [Route("{id}")]
+        [HttpDelete]
+        public void Delete([FromRoute] int id);
     }
 }

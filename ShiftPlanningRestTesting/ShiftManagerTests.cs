@@ -1,3 +1,4 @@
+using Microsoft.VisualStudio.CodeCoverage;
 using ShiftPlanningLibrary;
 using ShiftPlanningRest;
 using ShiftPlanningRest.Managers;
@@ -36,5 +37,43 @@ namespace ShiftPlanningRestTesting {
             Assert.IsTrue(pre.Count+1 == post.Count);
         }
 
+        [TestMethod]
+        public void ShiftManagerTestsUpdateShiftPoitive() {
+            DatabaseHelper.ShiftPlanningDatabase = testDatabaseConnectionString;
+
+            IShiftManager manager = new ShiftManager();
+
+            List<IShift> pre = manager.GetShifts();
+            IShift toUpdate = pre[0];
+
+            DateTime start = DateTime.Now;
+            DateTime end = start.AddHours(1);
+            IShift updated = new Shift(toUpdate.Id, start, end);
+            Assert.AreNotEqual(toUpdate, updated);
+            manager.PutShift(updated);
+
+            List<IShift> post = manager.GetShifts();
+
+            Assert.IsTrue(post.Contains(updated));
+        }
+
+        [TestMethod]
+        public void ShiftManagerTestsRemoveShiftPoitive() {
+            DatabaseHelper.ShiftPlanningDatabase = testDatabaseConnectionString;
+
+            IShiftManager manager = new ShiftManager();
+
+            List<IShift> pre = manager.GetShifts();
+            IShift toRemove = pre[0];
+
+            DateTime start = DateTime.Now;
+            DateTime end = start.AddHours(1);
+            manager.RemoveShift(toRemove);
+
+            List<IShift> post = manager.GetShifts();
+
+            Assert.IsFalse(post.Contains(toRemove));
+            Assert.IsTrue(pre.Count - 1 == post.Count);
+        }
     }
 }
