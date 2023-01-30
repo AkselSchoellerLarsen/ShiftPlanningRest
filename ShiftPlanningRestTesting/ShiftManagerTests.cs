@@ -54,6 +54,7 @@ namespace ShiftPlanningRestTesting {
 
             List<IShift> post = manager.GetShifts();
 
+            Assert.IsFalse(post.Contains(toUpdate));
             Assert.IsTrue(post.Contains(updated));
         }
 
