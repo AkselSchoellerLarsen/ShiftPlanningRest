@@ -10,8 +10,20 @@ namespace ShiftPlanningRest.Managers {
         }
 
         #region GetShifts
-        public List<IShift> GetShifts() {
-            return new List<IShift>(_shifts);
+        public List<IShift> GetShifts(IUser user) {
+            List<IShift> re = new List<IShift>();
+            
+            if(user.IsAdmin) {
+                re.AddRange(_shifts);
+            } else {
+                foreach(var shift in _shifts) {
+                    if(!shift.HasUser || shift.UserEmail == user.Email) {
+                        re.Add(shift);
+                    }
+                }
+            }
+
+            return re;
         }
 
         private static string SQLSelectShifts = "SELECT * FROM dbo.iteration1_shift;";

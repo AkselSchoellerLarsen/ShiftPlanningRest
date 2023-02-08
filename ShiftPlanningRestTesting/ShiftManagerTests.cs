@@ -15,7 +15,7 @@ namespace ShiftPlanningRestTesting {
 
             IShiftManager manager = new ShiftManager();
 
-            manager.GetShifts();
+            manager.GetShifts(new User("","",true));
         }
 
         [TestMethod]
@@ -24,14 +24,14 @@ namespace ShiftPlanningRestTesting {
 
             IShiftManager manager = new ShiftManager();
 
-            List<IShift> pre = manager.GetShifts();
+            List<IShift> pre = manager.GetShifts(new User("", "", true));
 
             DateTime start = DateTime.Now;
             DateTime end = start.AddHours(1);
             IShift shift = new Shift(start, end);
             manager.AddShift(shift);
 
-            List<IShift> post = manager.GetShifts();
+            List<IShift> post = manager.GetShifts(new User("", "", true));
 
             Assert.IsTrue(post.Contains(shift));
             Assert.IsTrue(pre.Count+1 == post.Count);
@@ -43,7 +43,7 @@ namespace ShiftPlanningRestTesting {
 
             IShiftManager manager = new ShiftManager();
 
-            List<IShift> pre = manager.GetShifts();
+            List<IShift> pre = manager.GetShifts(new User("", "", true));
             IShift toUpdate = pre[0];
 
             DateTime start = DateTime.Now;
@@ -52,7 +52,7 @@ namespace ShiftPlanningRestTesting {
             Assert.AreNotEqual(toUpdate, updated);
             manager.PutShift(updated);
 
-            List<IShift> post = manager.GetShifts();
+            List<IShift> post = manager.GetShifts(new User("", "", true));
 
             Assert.IsFalse(post.Contains(toUpdate));
             Assert.IsTrue(post.Contains(updated));
@@ -64,14 +64,14 @@ namespace ShiftPlanningRestTesting {
 
             IShiftManager manager = new ShiftManager();
 
-            List<IShift> pre = manager.GetShifts();
+            List<IShift> pre = manager.GetShifts(new User("", "", true));
             IShift toRemove = pre[0];
 
             DateTime start = DateTime.Now;
             DateTime end = start.AddHours(1);
             manager.RemoveShift(toRemove);
 
-            List<IShift> post = manager.GetShifts();
+            List<IShift> post = manager.GetShifts(new User("", "", true));
 
             Assert.IsFalse(post.Contains(toRemove));
             Assert.IsTrue(pre.Count - 1 == post.Count);
