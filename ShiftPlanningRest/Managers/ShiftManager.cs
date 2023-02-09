@@ -26,7 +26,7 @@ namespace ShiftPlanningRest.Managers {
             return re;
         }
 
-        private static string SQLSelectShifts = "SELECT * FROM dbo.iteration1_shift;";
+        private static string SQLSelectShifts = "SELECT * FROM dbo.iteration3_shift;";
 
         private async static Task<List<IShift>> SelectShifts() {
             try {
@@ -37,10 +37,11 @@ namespace ShiftPlanningRest.Managers {
                         SqlDataReader reader = await command.ExecuteReaderAsync();
                         while (reader.Read()) {
                             int id = reader.GetInt32(0);
-                            DateTime start = reader.GetDateTime(1);
-                            DateTime end = reader.GetDateTime(2);
+                            string email = reader.GetString(1);
+                            DateTime start = reader.GetDateTime(2);
+                            DateTime end = reader.GetDateTime(3);
 
-                            IShift shift = new Shift(id, start, end);
+                            IShift shift = new Shift(id, email, start, end);
 
                             shifts.Add(shift);
                         }
@@ -63,14 +64,15 @@ namespace ShiftPlanningRest.Managers {
             return InsertShift(shift).Result;
         }
 
-        private static string SQLInsertShift = "INSERT INTO dbo.iteration1_shift\n" +
-            "VALUES(@id, @start, @end);";
+        private static string SQLInsertShift = "INSERT INTO dbo.iteration3_shift\n" +
+            "VALUES(@id, @email, @start, @end);";
 
         private static async Task<bool> InsertShift(IShift shift) {
             try {
                 using (SqlConnection connection = new SqlConnection(DatabaseHelper.ConnectionString)) {
                     using (SqlCommand command = new SqlCommand(SQLInsertShift, connection)) {
                         command.Parameters.AddWithValue($"@id", shift.Id);
+                        command.Parameters.AddWithValue($"@email", shift.UserEmail);
                         command.Parameters.AddWithValue($"@start", shift.Start);
                         command.Parameters.AddWithValue($"@end", shift.End);
 
@@ -100,8 +102,8 @@ namespace ShiftPlanningRest.Managers {
             return UpdateShift(shift).Result;
         }
 
-        private static string SQLUpdateShift = "UPDATE dbo.iteration1_shift\n" +
-            "SET _Start = @start, _End = @end\n" +
+        private static string SQLUpdateShift = "UPDATE dbo.iteration3_shift\n" +
+            "SET Email = @email, _Start = @start, _End = @end\n" +
             "WHERE Id = @id";
 
         private static async Task<bool> UpdateShift(IShift shift) {
@@ -109,6 +111,7 @@ namespace ShiftPlanningRest.Managers {
                 using (SqlConnection connection = new SqlConnection(DatabaseHelper.ConnectionString)) {
                     using (SqlCommand command = new SqlCommand(SQLUpdateShift, connection)) {
                         command.Parameters.AddWithValue($"@id", shift.Id);
+                        command.Parameters.AddWithValue($"@email", shift.UserEmail);
                         command.Parameters.AddWithValue($"@start", shift.Start);
                         command.Parameters.AddWithValue($"@end", shift.End);
 
@@ -141,7 +144,7 @@ namespace ShiftPlanningRest.Managers {
             return RemoveShift(shift.Id);
         }
 
-        private static string SQLDeleteShift = "DELETE FROM dbo.iteration1_shift\n" +
+        private static string SQLDeleteShift = "DELETE FROM dbo.iteration3_shift\n" +
             "WHERE Id = @id";
 
         private static async Task<bool> DeleteShift(int id) {
