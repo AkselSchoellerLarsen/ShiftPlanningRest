@@ -12,7 +12,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IShiftManager, ShiftManager>();
 builder.Services.AddSingleton<IUserManager, UserManager>();
-builder.Services.AddScoped<IUserController, UserController>();
 
 var app = builder.Build();
 

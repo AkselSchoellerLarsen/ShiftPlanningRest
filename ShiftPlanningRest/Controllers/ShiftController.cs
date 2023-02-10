@@ -6,21 +6,21 @@ namespace ShiftPlanningRest.Controllers {
     [Route("[controller]")]
     [ApiController]
     public class ShiftController : Controller, IShiftController {
-        private readonly IShiftManager _manager;
-        private readonly IUserController _controller;
+        private readonly IShiftManager _shiftManager;
+        private readonly IUserManager _userManager;
 
-        public ShiftController(IShiftManager shiftManager, IUserController userController) {
-            _manager = shiftManager;
-            _controller = userController;
+        public ShiftController(IShiftManager shiftManager, IUserManager userManager) {
+            _shiftManager = shiftManager;
+            _userManager = userManager;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult<List<IShift>> GetShifts([FromBody] User user) {
-            if(_controller.VerifyUser(user).Value) { // true -> user in database
-                GetShifts(user);
-                return Ok();
+        public ActionResult<List<IShift>> GetShifts([FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
+            User user = new User(email, password, isAdmin);
+            if(_userManager.VerifyUser(user)) {
+                return Ok(_shiftManager.GetShifts(user));
             }
             return Unauthorized("Invalid credentials");
         }
@@ -28,9 +28,10 @@ namespace ShiftPlanningRest.Controllers {
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult Post([FromBody] Shift shift, [FromBody] User user) {
-            if (_controller.VerifyUser(user).Value && user.IsAdmin) {
-                _manager.AddShift(shift);
+        public ActionResult Post([FromBody] Shift shift, [FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
+            User user = new User(email, password, isAdmin);
+            if (_userManager.VerifyUser(user) && user.IsAdmin) {
+                _shiftManager.AddShift(shift);
                 return Created("", shift);
             }
             return Unauthorized("Invalid credentials");
@@ -39,10 +40,10 @@ namespace ShiftPlanningRest.Controllers {
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult Put([FromBody] Shift shift, [FromBody] User user) {
-            if (_controller.VerifyUser(user).Value && user.IsAdmin) {
-                _manager.PutShift(shift);
-                return Accepted();
+        public ActionResult Put([FromBody] Shift shift, [FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
+            User user = new User(email, password, isAdmin);
+            if (_userManager.VerifyUser(user) && user.IsAdmin) {
+                return Accepted(_shiftManager.PutShift(shift));
             }
             return Unauthorized("Invalid credentials");
         }
@@ -51,10 +52,10 @@ namespace ShiftPlanningRest.Controllers {
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult Delete([FromRoute] int id, [FromBody] User user) {
-            if (_controller.VerifyUser(user).Value && user.IsAdmin) {
-                _manager.RemoveShift(id);
-                return Accepted();
+        public ActionResult Delete([FromRoute] int id, [FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
+            User user = new User(email, password, isAdmin);
+            if (_userManager.VerifyUser(user) && user.IsAdmin) {
+                return Accepted(_shiftManager.RemoveShift(id));
             }
             return Unauthorized("Invalid credentials");
         }

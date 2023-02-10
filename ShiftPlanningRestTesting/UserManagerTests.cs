@@ -124,13 +124,14 @@ namespace ShiftPlanningRestTesting {
             Assert.IsFalse(preUser.IsAdmin);
 
             manager.MakeUserAdmin(email);
+            users = manager.GetUsers();
             IUser postUser = users.Find((u) => {
                 if (u.Email == email) {
                     return true;
                 }
                 return false;
             }) ?? new User("", "", false);
-            Assert.IsTrue(preUser.IsAdmin);
+            Assert.IsTrue(postUser.IsAdmin);
         }
         #endregion
     }

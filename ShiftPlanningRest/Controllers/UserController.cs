@@ -15,8 +15,9 @@ namespace ShiftPlanningRest.Controllers {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult<List<IUser>> GetUsers([FromBody] User user) {
-            if(VerifyUser(user).Value) {
+        public ActionResult<List<IUser>> GetUsers([FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
+            User user = new User(email, password, isAdmin);
+            if (_manager.VerifyUser(user)) {
                 return Ok(_manager.GetUsers());
             }
             return Unauthorized("Invalid credentials");
@@ -29,23 +30,34 @@ namespace ShiftPlanningRest.Controllers {
             return Created("", user);
         }
 
+        /*
+        [Route("Verify")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<bool> VerifyUser([FromBody] User user) {
+        public ActionResult<bool> VerifyUser([FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
+            User user = new User(email, password, isAdmin);
             return Ok(_manager.VerifyUser(user));
+        }
+        */
+        [Route("Verify")]
+        [HttpGet]
+        public bool VerifyUser([FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
+            User user = new User(email, password, isAdmin);
+            return _manager.VerifyUser(user);
         }
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult MakeUserAdmin([FromBody] User user, [FromBody] string email) {
-            if(!_manager.VerifyUser(user)) {
+        public ActionResult MakeUserAdmin([FromBody] string userEmail, [FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
+            User user = new User(email, password, isAdmin);
+            if (!_manager.VerifyUser(user)) {
                 return Unauthorized("Invalid credentials");
             }
             if(!user.IsAdmin) {
                 return Unauthorized("You must be an admin to make others into admins");
             }
-            _manager.MakeUserAdmin(email);
+            _manager.MakeUserAdmin(userEmail);
             return Accepted();
         }
     }

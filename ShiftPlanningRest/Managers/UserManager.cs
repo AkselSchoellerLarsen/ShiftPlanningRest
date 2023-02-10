@@ -101,17 +101,30 @@ namespace ShiftPlanningRest.Managers {
         #endregion
         #region MakeUserAdmin
         public bool MakeUserAdmin(string email) {
+            IUser? user = _users.Find((u) => {
+                if (u.Email == email) {
+                    return true;
+                }
+                return false;
+            });
+            if (user is null) {
+                return false;
+            }
+            _users.Remove(user);
+            user.IsAdmin = true;
+            _users.Add(user);
+
             return UpdateUserType(email).Result;
         }
 
-        private static string SQLUpdateShift = "UPDATE dbo.iteration3_user\n" +
+        private static string SQLUpdateUser = "UPDATE dbo.iteration3_user\n" +
             "SET IsAdmin = 'true'\n" +
             "WHERE Email = @email";
 
         private static async Task<bool> UpdateUserType(string email) {
             try {
                 using (SqlConnection connection = new SqlConnection(DatabaseHelper.ConnectionString)) {
-                    using (SqlCommand command = new SqlCommand(SQLUpdateShift, connection)) {
+                    using (SqlCommand command = new SqlCommand(SQLUpdateUser, connection)) {
                         command.Parameters.AddWithValue($"@email", email);
 
                         await command.Connection.OpenAsync();

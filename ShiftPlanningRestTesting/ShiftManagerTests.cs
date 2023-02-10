@@ -43,12 +43,17 @@ namespace ShiftPlanningRestTesting {
 
             IShiftManager manager = new ShiftManager();
 
+            DateTime start = DateTime.Now;
+            DateTime end = start.AddHours(1);
+            IShift shift = new Shift(start, end);
+            manager.AddShift(shift);
+
             List<IShift> pre = manager.GetShifts(new User("", "", true));
             IShift toUpdate = pre[0];
 
-            DateTime start = DateTime.Now;
-            DateTime end = start.AddHours(1);
-            IShift updated = new Shift(toUpdate.Id, start, end);
+            DateTime newStart = end;
+            DateTime newEnd = newStart.AddHours(1);
+            IShift updated = new Shift(toUpdate.Id, newStart, newEnd);
             Assert.AreNotEqual(toUpdate, updated);
             manager.PutShift(updated);
 
@@ -64,11 +69,14 @@ namespace ShiftPlanningRestTesting {
 
             IShiftManager manager = new ShiftManager();
 
+            DateTime start = DateTime.Now;
+            DateTime end = start.AddHours(1);
+            IShift shift = new Shift(start, end);
+            manager.AddShift(shift);
+
             List<IShift> pre = manager.GetShifts(new User("", "", true));
             IShift toRemove = pre[0];
 
-            DateTime start = DateTime.Now;
-            DateTime end = start.AddHours(1);
             manager.RemoveShift(toRemove);
 
             List<IShift> post = manager.GetShifts(new User("", "", true));
