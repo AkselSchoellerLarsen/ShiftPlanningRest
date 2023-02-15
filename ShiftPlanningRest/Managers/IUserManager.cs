@@ -7,5 +7,8 @@ namespace ShiftPlanningRest.Managers {
         public bool RegisterUser(IUser user);
         public bool VerifyUser(IUser user);
         public bool MakeUserAdmin(string email);
+        public bool RemoveUser(string email);
+        public bool RemoveUser(IUser user);
+
     }
 }

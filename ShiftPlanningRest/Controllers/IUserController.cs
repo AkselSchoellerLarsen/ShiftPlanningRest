@@ -26,5 +26,10 @@ namespace ShiftPlanningRest.Controllers {
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult MakeUserAdmin([FromQuery] string userEmail, [FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin);
+
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public ActionResult DeleteUser([FromQuery] string userEmail, [FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin);
     }
 }

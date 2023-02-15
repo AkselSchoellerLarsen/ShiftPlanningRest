@@ -146,6 +146,43 @@ namespace ShiftPlanningRest.Managers {
             return false;
         }
         #endregion
+        #region RemoveUser
+        public bool RemoveUser(string email) {
+            _users.RemoveAll((u) => { return u.Email == email; });
+            return DeleteUser(email).Result;
+        }
 
+        public bool RemoveUser(IUser user) {
+            return RemoveUser(user.Email);
+        }
+
+        private static string SQLDeleteUser = "DELETE FROM dbo.iteration3_user\n" +
+            "WHERE Email = @email";
+
+        private static async Task<bool> DeleteUser(string email) {
+            try {
+                using (SqlConnection connection = new SqlConnection(DatabaseHelper.ConnectionString)) {
+                    using (SqlCommand command = new SqlCommand(SQLDeleteUser, connection)) {
+                        command.Parameters.AddWithValue($"@email", email);
+
+                        await command.Connection.OpenAsync();
+
+                        int i = await command.ExecuteNonQueryAsync();
+                        if (i != 1) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception e) {
+                string s = e.StackTrace;
+                Console.WriteLine(s);
+                Console.Beep();
+            }
+            return false;
+        }
+        #endregion
     }
 }

@@ -134,5 +134,23 @@ namespace ShiftPlanningRestTesting {
             Assert.IsTrue(postUser.IsAdmin);
         }
         #endregion
+        #region RemoveUser
+        [TestMethod]
+        public void UserManagerTestsRemoveUserPoitive() {
+            DatabaseHelper.ShiftPlanningDatabase = testDatabaseConnectionString;
+
+            IUserManager manager = new UserManager();
+
+            Random r = new Random();
+            string email = $"{r.Next(100000, 1000000)}@{r.Next(1000, 10000)}.com";
+            string password = $"not{r.Next(1000, 10000)}";
+            IUser user = new User(email, password);
+            manager.RegisterUser(user);
+
+            Assert.IsTrue(manager.VerifyUser(user));
+            manager.RemoveUser(user);
+            Assert.IsFalse(manager.VerifyUser(user));
+        }
+        #endregion
     }
 }
