@@ -64,7 +64,7 @@ namespace ShiftPlanningRest.Controllers {
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult DeleteUser([FromQuery] string userEmail, [FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
+        public ActionResult DeleteUser([FromBody] string userEmail, [FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
             User user = new User(email, password, isAdmin);
             if (!_manager.VerifyUser(user)) {
                 return Unauthorized("Invalid credentials");
