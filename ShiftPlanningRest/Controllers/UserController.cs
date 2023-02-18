@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using ShiftPlanningLibrary;
 using ShiftPlanningRest.Managers;
 
@@ -64,6 +65,7 @@ namespace ShiftPlanningRest.Controllers {
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteUser([FromBody] string userEmail, [FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin) {
             User user = new User(email, password, isAdmin);
             if (!_manager.VerifyUser(user)) {
@@ -72,8 +74,10 @@ namespace ShiftPlanningRest.Controllers {
             if (!user.IsAdmin) {
                 return Unauthorized("You must be an admin to make delete users");
             }
-            _manager.RemoveUser(userEmail);
-            return Accepted();
+            if (_manager.RemoveUser(userEmail)) {
+                return Accepted();
+            }
+            return NotFound("Failed to remove user with email=" + userEmail);
         }
     }
 }

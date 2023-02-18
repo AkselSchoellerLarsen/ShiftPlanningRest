@@ -30,6 +30,7 @@ namespace ShiftPlanningRest.Controllers {
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult DeleteUser([FromBody] string userEmail, [FromHeader] string email, [FromHeader] string password, [FromHeader] bool isAdmin);
     }
 }
